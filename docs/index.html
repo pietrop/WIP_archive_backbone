@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>WIP</title>
+
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="vendor/bootstrap-3.3.6-dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="vendor/bootswatch.css">
+<!-- Optional theme -->
+<!-- <link rel="stylesheet" href="vendor/bootstrap-3.3.6-dist/css/bootstrap-theme.min.css"> -->
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="vendor/jquery.min.1.12.4.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="vendor/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
+<script src="vendor/underscore-min.js"></script>
+<script src="vendor/backbone-min.js"></script>
+<!-- <script src="js/sync.js"></script> -->
+<script src="vendor/tabletop.js"></script>
+<script src="vendor/backbone.tabletopSync.js"></script>
+<script src="vendor/mousetrap.js"></script>
+<script src="vendor/backbone.mousetrap.js"></script>
+
+  </head>
+  <body>
+  <style type="text/css">
+  .row.transciption {
+    overflow: auto!important;
+    height: 300px!important;
+  }
+  </style>
+
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#home">WIP</a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <!-- <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li> -->
+        <li><a href="#interviews">Interviews</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+       <li><a href="#blog">Blog</a></li>
+        <li><a href="#contact">Contact</a></li>  
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<!-- END NAVBAR -->
+
+<div class="container">
+<div id="main">
+</div>
+
+
+</div>
+
+<!-- Template -->
+ <script id="trailer-template" type="text/underscore-template">
+      <%= description %>
+      <%= vimeo_id%>
+  </script>
+
+
+ <script id="interview-template" type="text/underscore-template">
+      <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+       <a href="#interview/<%= id %>" >
+       <img src="<%= img_thumbnail %>" class="img-responsive">
+        <h4><%= name %></h4>
+      </a>
+        <h5><%= job_title %></h5>
+        <p> <%= short_description %></p>
+    </div>
+  </script>
+
+<script id="interview-show-template" type="text/underscore-template">
+  <div class="row">
+      <div class="col-xs-12  col-sm-8 col-md-8 col-lg-8">
+        <div class="row">
+          <div class="embed-responsive embed-responsive-16by9">
+          <iframe class="embed-responsive-item" width="100%"  src="https://player.vimeo.com/video/<%= vimeo_id %>?title=0&byline=0&portrait=0"></iframe>
+        </div>
+        </div>
+        <hr>
+        <div class="row transciption" >
+       <!--  <p> <%= JSON.stringify(transcription_json,null,4) %></p> -->
+           <!-- Transcription  -->
+          <div class="panel-body transcription">
+          <!-- Paragaph module -->
+          <% _.each(transcription_json.text, function(paragraph) { %>
+          <dl class="dl-horizontal">
+            <dt><%= paragraph.speaker %>
+               </dt> <dt>
+              <!-- fir is the first  -->
+              <a data-start-time="<%= fromSeconds(paragraph.paragraph[0].line[0].startTime) %>" data-video-id="<%= 'videoId_'+ id  %>" class="timecodes"><%= paragraph.paragraph[0].line[0].startTime %></a>
+            </dt>
+              <% _.each(paragraph.paragraph, function(lines) { %>
+              <% _.each(lines, function(line) { %>
+            <dd >
+              <!--  <p class="lines" contenteditable="false"> -->
+                <% _.each(line, function(word) { %>
+                  <span contenteditable="false"  class="words text-muted" data-transcription-id="<%= id %>"  data-paragaph-id="<%= paragraph.id %>"  data-word-id="<%= word.id %>" data-line-id="<%= line.id %>" data-reel-name="<%= transcription_json.metadata.reelName %>" data-clip-name="<%= transcription_json.metadata.fileName %>" data-video-id="<%= 'videoId_'+ id %>"  data-speaker="<%= paragraph.speaker %>" data-src="<%= transcription_json.videoOgg %>" data-audio-file="<%= transcription_json.audioFile %>" data-start-time="<%= word.startTime %>" data-text="<%= word.text %>" data-end-time="<%= word.endTime %>"><%= word.text %> </span>
+                  <% }) %>
+           <!--    </p> -->
+           </dd>
+             <% }) %>
+            <% }) %>
+          </dl>
+          <% }) %>
+          <!-- ./paragraph module -->
+      </div>
+       <!-- Transcription  -->
+
+
+   
+        </div>
+      </div>
+
+      <div class="col-xs-12  col-sm-4 col-md-4 col-lg-4">
+      <!-- documentation  -->
+        <!-- <img src="http://placehold.it/750x750" class="img-responsive"> -->
+        <h3><%= name %></h3>
+        <h5><%= job_title %></h5>
+       <p> <%= description %></p>
+
+      </div>
+    </div>
+</script>
+
+
+ <script type="text/javascript">
+
+
+  // window.onload = function() { init() };
+  //    var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1Xa1zX7_EQB6m77UdrUIXvhMm4owbDn9n59Pod8R-ozA/pubhtml';
+  // function init() {
+  //   Tabletop.init( { key: public_spreadsheet_url,
+  //                    callback: showInfo,
+  //                    simpleSheet: true } )
+  // }
+
+  // function showInfo(data, tabletop) {
+  //   alert("Successfully processed!")
+  //   console.log(data);
+  // }
+
+      
+
+/*
+* [Timecode conversion code from and extracted to use outside of npm node modules on client side]{@link  https://www.npmjs.com/package/node-timecodes}
+*/
+
+/**
+* @funciton padNumber
+* @description helper function to make timecode consistent eg 00:05:00:00 vs 00:5:00:00
+* @param{nb} digit - integer to make into two digits if not by adding a zero
+*/
+var padNumber = function (nb) {
+  var length = arguments.length <= 1 || arguments[1] === undefined ? 2 : arguments[1];
+
+  while (('' + nb).length < length) {
+    nb = '0' + nb;
+  }
+  return nb;
+}        
+  
+/**
+* @function fromSeconds
+* @description helper funciton converts time in seconds to timecode 
+* @param{number} seconds - seconds to convdert to 00:00:00:00
+* @returns {string} result - returns string "hh:mm:ss:ms" eg "00:00:00:00"
+*/
+var fromSeconds = function (seconds) {
+  var _ref = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+  var defaultFrameRate = 25;
+  var _ref$frameRate = _ref.frameRate;
+  var frameRate = _ref$frameRate === undefined ? defaultFrameRate : _ref$frameRate;
+  var _ref$ms = _ref.ms;
+  var ms = _ref$ms === undefined ? false : _ref$ms;
+
+  var _seconds = parseFloat(seconds) || 0,
+      milliseconds = Math.round((_seconds - parseInt(_seconds, 10)) * 10000, 10) / 10;
+
+  var hours = Math.floor(_seconds / (60 * 60), 10),
+      mins = Math.floor(_seconds / 60, 10) - hours * 60,
+      secs = Math.floor(_seconds - hours * 3600 - mins * 60, 10),
+      frame = Math.floor(Math.round(milliseconds / 1000 / (1 / frameRate) * 100) / 100);
+
+  var suffix = ms && padNumber(parseInt(milliseconds, 10), 3) || padNumber(frame, 2);
+
+  return padNumber(hours) + ':' + padNumber(mins) + ':' + padNumber(secs) + ':' + suffix;
+}
+    
+     
+
+     
+
+
+    </script>
+
+
+<!-- <script src="js/models/transcription.js"></script>
+<script src="js/collections/transcriptions.js"></script> -->
+<script src="js/router.js"></script>
+
+
+  </body>
+</html>
